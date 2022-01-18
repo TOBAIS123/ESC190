@@ -7,7 +7,6 @@ int main() {
     double test_p1 = split_bill (50.01 , 0.13, 0.15, 2);
     printf("The split will be: $%.2f.\n", test_p1 );
     // $32 .50
-    //Add more tests here ...
 
     // Testing Part 2
     double test_p2 = adjust_price (25.00);
