@@ -41,15 +41,15 @@ int sandy_eats(char menu_item []){
         flag=0;
     }
 
-    char flag_words[4][5]= {"j","k","l","fish"};
+    char flag_chars[4][5]= {"j","k","l","fish"};
 
     for (int j=0; j<4; j++){
-        if (strstr(menu_item, flag_words[j]) != NULL){
+        if (strstr(menu_item, flag_chars[j]) != NULL){
             flag=0;
         }
     }
 
-    return 0;
+    return flag;
 }
 
 
