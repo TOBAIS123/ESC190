@@ -48,7 +48,6 @@ int sandy_eats(char menu_item []){
             flag=0;
         }
     }
-
     return flag;
 }
 
@@ -60,6 +59,4 @@ void imagine_fish(char thing[]){
     for (int i=0; i<5; i++){
         thing[str_len+i]=word[i];
     }
-
-
 }
