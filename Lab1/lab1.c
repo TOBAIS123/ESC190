@@ -24,31 +24,30 @@ int sandy_eats(char menu_item []){
 
     //convert all uppercase chars to lowercase
     for(int i = 0; menu_item[i]; i++){
-         if (menu_item[i] >= 65 && menu_item[i] <= 90) {
+         if (menu_item[i] >= 'A' && menu_item[i] <= 'Z') {
             menu_item[i] = menu_item[i] + 32;
         }  
     }
     
     int count = 0;  
-    
     //Counts each char  except space  
     for(int i = 0; i < strlen(menu_item); i++) {  
-        if(menu_item[i] != ' ')  
+        if(menu_item[i]  >= 'a' && menu_item[i] <= 'z')  
             count++;  
     }
 
     if (count%2==1){
-        flag=0;
+        return 0;
     }
 
     char flag_chars[4][5]= {"j","k","l","fish"};
 
     for (int j=0; j<4; j++){
         if (strstr(menu_item, flag_chars[j]) != NULL){
-            flag=0;
+            return 0;
         }
     }
-    return flag;
+    return 1;
 }
 
 
