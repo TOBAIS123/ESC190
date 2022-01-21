@@ -4,13 +4,9 @@
 
 double split_bill(double base_amount , double tax_rate , double tip_rate , int num_people) {
     double total_split=(base_amount*(1.0+tax_rate))*(1.0+tip_rate)/num_people;
-    return total_split+0.005;
-    /*
-    if (((int)total_split*1000)%10 != 0){
-        total_split = total_split+0.005;
-    }
-    return total_split;
-    */
+    return (ceil(total_split*100))/100;
+
+
 }
 
 double adjust_price(double original_price) {
