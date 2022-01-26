@@ -16,8 +16,6 @@ double adjust_price(double original_price) {
 
 int sandy_eats(char menu_item []){
     
-    int flag;
-
     //convert all uppercase chars to lowercase
     for(int i = 0; menu_item[i]; i++){
          if (menu_item[i] >= 'A' && menu_item[i] <= 'Z') {
