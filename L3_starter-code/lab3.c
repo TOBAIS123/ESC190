@@ -4,9 +4,11 @@
 int add_request(struct party_node **head, char *item, double price, char *ta){
     if (strcmp(*item,"IDE") !=0) {    
         struct party_node* Element = (struct party_node*)malloc(sizeof(struct party_node)); 
-        Element->item = item; 
+        Element->item = (char*)malloc(sizeof(char)*(strlen(item)+1));
+        strcpy(Element->item,item);
         Element->price=price;
-        Element->ta=ta;
+        Element->ta=(char*)malloc(sizeof(char)*(strlen(ta)+1));
+        strcpy(Element->ta,ta);
         Element->next = *head;  
         (*head) = Element; 
         return 0; 
