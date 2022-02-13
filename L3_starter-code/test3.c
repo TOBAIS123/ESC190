@@ -28,7 +28,7 @@ int main(){
     check_add = add_request(&head, "Champagne", 100.00, "Samantha");
 
     print_list(head); //10 requests added
-
+    /*
     //Remove Samantha's request for Champagne
     printf("LIFO removal:\n");
     remove_request(&head);
@@ -46,7 +46,7 @@ int main(){
     remainder = finalize_list(&head, 500.00);
     print_list(head);
     printf("The remainder after shopping is: %.2lf\n", remainder);
-
+    */
     //Free the list
     while(head!=NULL){
         remove_request(&head);
