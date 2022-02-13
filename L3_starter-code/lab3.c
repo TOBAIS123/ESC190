@@ -2,7 +2,18 @@
 
 //Add TA party item request to the list
 int add_request(struct party_node **head, char *item, double price, char *ta){
-    //Add code here
+    if (strcmp(*item,'IDE') !=0) {    
+        struct party_node* Element = (struct party_node*)malloc(sizeof(struct party_node)); 
+        Element->item = (char*)malloc(sizeof(*item) * sizeof(char)); 
+        Element->price=price;
+        Element->ta=(char*)malloc(sizeof(*ta) * sizeof(char));
+        Element->next = *head;  
+        (*head) = Element; 
+        return 0; 
+    }
+    else{
+        return -1;
+    }
 }
 
 //Remove the last item added
