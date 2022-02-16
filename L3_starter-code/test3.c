@@ -28,7 +28,7 @@ int main(){
     check_add = add_request(&head, "Champagne", 100.00, "Samantha");
 
     print_list(head); //10 requests added
-    /*
+    
     //Remove Samantha's request for Champagne
     printf("LIFO removal:\n");
     remove_request(&head);
@@ -39,7 +39,8 @@ int main(){
     printf("Sorting by price:");
     make_sorted(&head);
     print_list(head);
-    
+
+    /*
     //Finalize the shopping list
     printf("Finalizing the shopping list:\n");
     double remainder=0.00;
