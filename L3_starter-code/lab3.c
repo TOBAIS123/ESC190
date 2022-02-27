@@ -24,53 +24,79 @@ void remove_request(struct party_node **head){
     if (*head == NULL){
         return;
     }
-    struct party_node *temp = *head;
-    *head = temp->next;
-    free(temp->item);
-    free(temp->ta);
-    free(temp);
+    else {
+        struct party_node *remove = *head;
+        *head = remove->next;
+        free(remove->item);
+        free(remove->ta);
+        free(remove);
+
+    }
 }
 
 //Sort party item requests - in place?
 void make_sorted(struct party_node **head){
-    int flag = 1;
-    struct party_node *curr = *head;
+    int swap = 1;
+    struct party_node *current = *head;
     struct party_node *last = NULL;
-
     if (*head == NULL){
         return;
     }
-
-    while (flag){
-        flag = 0;
-        curr = *head;
-
-        while(curr->next != last){
-            if(curr->next->price > curr->price){
-                double temp_price = curr->next->price;
-                char *temp_ta = curr->next->ta;
-                char *temp_item = curr->next->item;
-
-                curr->next->price = curr->price;
-                curr->next->ta = curr->ta;
-                curr->next->item = curr->item;
-
-                curr->price = temp_price;
-                curr->ta = temp_ta;
-                curr->item = temp_item;
-
-                flag = 1;
+    else{
+        while (swap){
+            current = *head;
+            swap = 0;
+            while(current->next != last)
+            {
+                if(current->next->price > current->price)
+                {
+                    //temp node for swap
+                    char *tempTa = current->next->ta;
+                    char *tempItem = current->next->item;
+                    double tempPrice = current->next->price;
+                    swap = 1; 
+                    //swap next with current
+                    current->next->ta = current->ta;
+                    current->next->item = current->item;
+                    current->next->price = current->price;
+                    //swap temp with current
+                    current->price = tempPrice;
+                    current->ta = tempTa;
+                    current->item = tempItem;
+                }
+                current = current->next;
             }
-            curr = curr->next;
-        }
-        last = curr;
- 
+            last = current;
+        }   
     }
 }
 
 //Trim list to fit the budget
 double finalize_list(struct party_node **head, double budget){
-    //Add code here
+    struct party_node* current = *head;
+    struct party_node* prev = NULL;
+
+    while (current != NULL){
+        if (current->price > budget){
+            if (current!= *head){
+                prev->next = current->next;
+                current->next = (*head);
+                *head = current;
+                remove_request(head);
+                current = prev->next;
+            }
+            else {
+                current = current->next;
+                remove_request(head);
+            }
+        }
+        else{
+            budget -= current->price;
+            prev = current;
+            current=current->next;
+        }
+    }
+    return budget;
 }
 
 //Print the current list - hope this is helpful!

@@ -4,7 +4,6 @@
 int main(){
 	char* restaurant_name = "Tim Bortons";
 	int choice = -1;
-	int int_input;
 	
 	int num_pending_orders;
 	int num_completed_orders;
