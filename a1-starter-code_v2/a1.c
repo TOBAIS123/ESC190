@@ -3,19 +3,16 @@
 Menu* load_menu(char* fname){
 	Menu* menu= (Menu *)malloc(sizeof(Menu));
 
-	FILE* fm = fopen(fname, "r");
+	FILE* f = fopen(fname, "r");
 	char* line= NULL;
 	size_t len = 1000;
 
 	int num_lines=0;
 
-	while(getline(&line, &len, fm) != -1){
+	while(getline(&line, &len, f) != -1){
 		num_lines++;
 	}
-	fclose(fm);
-
-	FILE* f = fopen(fname, "r");
-	line= NULL;
+	fseek(f, 0, SEEK_SET);
 	
 	menu->num_items=num_lines;
 	menu->item_codes= (char**)malloc(sizeof(char*)*num_lines);
@@ -51,9 +48,9 @@ Restaurant* initialize_restaurant(char* name){
 	r->num_pending_orders=0;
 
 	Queue *new_node = (Queue*)malloc(sizeof(Queue));
-    r->pending_orders= new_node;
 	new_node->head = NULL;
     new_node->tail = NULL;
+	r->pending_orders= new_node;
 
 	return r;
 }
@@ -92,10 +89,25 @@ Order* build_order(char* items, char* quantities){
 	Managing our order queue
 */
 void enqueue_order(Order* order, Restaurant* restaurant){
-	Restaurant* restaurent =
+	restaurant->num_pending_orders +=1;
+	QueueNode* queue = (QueueNode*)malloc(sizeof(Queue));
+	Order* ord = (Order*)malloc(sizeof(Order));
+	queue->order= ord;
+
+	if (restaurant->pending_orders->head==NULL){
+		restaurant->pending_orders->head=queue;
+		restaurant->pending_orders->tail=queue;
+		queue->next=NULL;
+	}else {
+		queue->next=restaurant->pending_orders->head->next;
+		restaurant->pending_orders->head->next=queue;
+		restaurant->pending_orders->head=queue;
+	}
 
 }
-Order* dequeue_order(Restaurant* restaurant){}
+Order* dequeue_order(Restaurant* restaurant){
+
+}
 
 /*
 	Getting information about our orders and order status
@@ -108,6 +120,7 @@ double get_item_cost(char* item_code, Menu* menu){
 	}
 
 }
+
 double get_order_subtotal(Order* order, Menu* menu){
 	double sum=0;
 	for (int i=0; i<order->num_items;i++){
@@ -125,8 +138,12 @@ double get_order_total(Order* order, Menu* menu){
 	return total*(1.0+(TAX_RATE/100.0));
 }
 
-int get_num_completed_orders(Restaurant* restaurant){}
-int get_num_pending_orders(Restaurant* restaurant){}
+int get_num_completed_orders(Restaurant* restaurant){
+	return restaurant->num_completed_orders;
+}
+int get_num_pending_orders(Restaurant* restaurant){
+	return restaurant->num_pending_orders;
+}
 
 /*
 	Closing down and deallocating memory
@@ -201,9 +218,9 @@ void print_receipt(Order* order, Menu* menu){
 	fprintf(stdout, "Tax %d%%: \t$%.2f\n", TAX_RATE, order_total);
 	fprintf(stdout, "              ========\n");
 }
-
+/*
 int main (){
 	print_menu(load_menu("menu.txt"));
 	Order* order = build_order("A1B1", "12,13");
 	print_order(order);
-}
+}*/
