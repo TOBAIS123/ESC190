@@ -38,6 +38,16 @@ Menu* load_menu(char* fname){
 	return menu;
 }
 
+/*
+Inputs <name> is a string literal.
+Output Return a pointer to a Restaurant with:
+- name field set equal to the input parameter <name>
+- menu initialized to the contents of MENU FNAME (see load menu(...))
+- num completed orders set to 0
+- num pending orders set to 0
+- pending orders intialized to an empty Queue. An empty Queue is defined as a Queue
+with its head and tail set to NULL
+*/
 Restaurant* initialize_restaurant(char* name){
 	Restaurant* r = (Restaurant*)malloc(sizeof(Restaurant));
 	r->name = (char*)malloc(sizeof(char)*strlen(name)+1);
@@ -90,23 +100,30 @@ Order* build_order(char* items, char* quantities){
 */
 void enqueue_order(Order* order, Restaurant* restaurant){
 	restaurant->num_pending_orders +=1;
-	QueueNode* queue = (QueueNode*)malloc(sizeof(Queue));
+	QueueNode* node = (QueueNode*)malloc(sizeof(Queue));
 	Order* ord = (Order*)malloc(sizeof(Order));
-	queue->order= ord;
+	node->order = ord;
 
 	if (restaurant->pending_orders->head==NULL){
-		restaurant->pending_orders->head=queue;
-		restaurant->pending_orders->tail=queue;
-		queue->next=NULL;
+		restaurant->pending_orders->head=node;
+		restaurant->pending_orders->tail=node;
+		node->next=NULL;
 	}else {
-		queue->next=restaurant->pending_orders->head->next;
-		restaurant->pending_orders->head->next=queue;
-		restaurant->pending_orders->head=queue;
+		node->next=restaurant->pending_orders->head;//makes the new node point to the head node
+		restaurant->pending_orders->head=node;//makes the head point to the new node
+
+
+
+		//node->next=restaurant->pending_orders->head->next;
+		//restaurant->pending_orders->head->next=node;
+		//restaurant->pending_orders->head=node;
 	}
 
 }
 Order* dequeue_order(Restaurant* restaurant){
-
+	Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
+	returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
+	for(int i = 0 // loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
 }
 
 /*
