@@ -203,7 +203,14 @@ void clear_menu(Menu** menu){
 
 
 void close_restaurant(Restaurant** restaurant){
-
+	while((*restaurant)->num_pending_orders > 0){
+		dequeue_order((*restaurant));
+	}
+	clear_menu(&((*restaurant)->menu));
+	free((*restaurant)->name);
+	free((*restaurant)->pending_orders);
+	free(*restaurant);
+	*restaurant = NULL;
 }
 
 void print_menu(Menu* menu){
