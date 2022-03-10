@@ -121,9 +121,24 @@ void enqueue_order(Order* order, Restaurant* restaurant){
 
 }
 Order* dequeue_order(Restaurant* restaurant){
+	(restaurant->num_pending_orders)--;
 	Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
 	returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
-	for(int i = 0 // loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
+	if (restaurant->num_pending_orders == 1)
+	{
+		//free(&(restaurant->pending_orders->head->order));
+		free(&(restaurant->pending_orders->tail->next)); // frees the value of next not sure if this is needed - todo check
+		free((restaurant->pending_orders->tail)); // frees the value of tail node (the node)
+		restaurant->pending_orders->head=NULL;
+		restaurant->pending_orders->tail=NULL;
+	}
+
+	QueueNode* cur = restaurant->pending_orders->head->next;
+	for(int i = 1; i<restaurant->num_pending_orders-2; i++) // loop iterates to the third last element of the linkedlist
+	{
+		cur = cur->next;
+	}
+	// loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
 }
 
 /*
