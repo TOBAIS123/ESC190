@@ -223,7 +223,8 @@ void clear_menu(Menu** menu){
 
 void close_restaurant(Restaurant** restaurant){
 	while((*restaurant)->num_pending_orders > 0){
-		dequeue_order((*restaurant));
+		Order* o = dequeue_order((*restaurant));
+		clear_order(&o);
 	}
 	clear_menu(&((*restaurant)->menu));
 	free((*restaurant)->name);
