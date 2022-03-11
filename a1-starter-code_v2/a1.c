@@ -67,9 +67,9 @@ Restaurant* initialize_restaurant(char* name){
 
 Order* build_order(char* items, char* quantities){
 
-	Order* order= (Order*)malloc(sizeof(Order));
 	int item_len =strlen(items)/(ITEM_CODE_LENGTH-1);
 
+	Order* order= (Order*)malloc(sizeof(Order));
 	order->item_quantities=(int*)malloc(sizeof(int)*item_len);
 	char* temp_quant = (char*)malloc(sizeof(char)*strlen(quantities));
 	
@@ -121,7 +121,7 @@ void enqueue_order(Order* order, Restaurant* restaurant){
 
 }
 Order* dequeue_order(Restaurant* restaurant){
-	(restaurant->num_pending_orders)--;
+/*(restaurant->num_pending_orders)--;
 	Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
 	returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
 	if (restaurant->num_pending_orders == 1)
@@ -139,6 +139,19 @@ Order* dequeue_order(Restaurant* restaurant){
 		cur = cur->next;
 	}
 	// loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
+*/
+	restaurant->num_pending_orders--;
+	restaurant->num_completed_orders++;
+
+	struct Queue *queue = restaurant->pending_orders;
+	struct Order *order = queue->head->order; // It is guaranteed that the Queue is non-empty
+	struct QueueNode *temp = queue->head;
+	queue->head = queue->head->next;
+	if(!(queue->head)){
+		queue->tail = NULL;
+	}
+	free(temp);
+	return order;
 }
 
 /*
@@ -150,7 +163,7 @@ double get_item_cost(char* item_code, Menu* menu){
 			return menu->item_cost_per_unit[i]; 
 		}
 	}
-
+	return 0;
 }
 
 double get_order_subtotal(Order* order, Menu* menu){
