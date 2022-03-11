@@ -23,7 +23,7 @@ Menu* load_menu(char* fname){
 	for (int j=0; j<num_lines;j++){
 		getline(&line, &len, f);
 
-
+		//insert whitespace stuff
 		char* split = strtok(line, MENU_DELIM);
 		menu->item_codes[j]=(char*)malloc(sizeof(char)*ITEM_CODE_LENGTH);
 		strcpy(menu->item_codes[j], split);
@@ -74,7 +74,7 @@ Order* build_order(char* items, char* quantities){
 
 	Order* order= (Order*)malloc(sizeof(Order));
 	order->item_quantities=(int*)malloc(sizeof(int)*item_len);
-	char* temp_quant = (char*)malloc(sizeof(char)*strlen(quantities));
+	char* temp_quant = (char*)malloc(sizeof(char)*(strlen(quantities)+1));
 	
 	strcpy(temp_quant, quantities);
 	char* split = strtok(temp_quant,MENU_DELIM);
@@ -86,7 +86,7 @@ Order* build_order(char* items, char* quantities){
 		order->item_quantities[i]= (int) strtod(split,NULL);
 	}
 
-	order->item_codes=(char**)malloc(sizeof(char*)*item_len);
+	order->item_codes=(char**)malloc(sizeof(char*)*(item_len));
 	order->num_items= item_len;
 	
 	for (int j =0; j<item_len; j++){
@@ -102,8 +102,8 @@ Order* build_order(char* items, char* quantities){
 	Managing our order queue
 */
 void enqueue_order(Order* order, Restaurant* restaurant){
-	restaurant->num_pending_orders +=1;
-	QueueNode* node = (QueueNode*)malloc(sizeof(Queue));
+	(restaurant->num_pending_orders)++;
+	QueueNode* node = (QueueNode*)malloc(sizeof(QueueNode));
 	Order* ord = (Order*)malloc(sizeof(Order));
 	node->order = ord;
 
@@ -112,8 +112,10 @@ void enqueue_order(Order* order, Restaurant* restaurant){
 		restaurant->pending_orders->tail=node;
 		node->next=NULL;
 	}else {
-		node->next=restaurant->pending_orders->head;//makes the new node point to the head node
-		restaurant->pending_orders->head=node;//makes the head point to the new node
+		//node->next=restaurant->pending_orders->head;//makes the new node point to the head node
+		restaurant->pending_orders->tail->next=node;//makes the head point to the new node
+		restaurant->pending_orders->tail=node;
+		node->next=NULL;
 
 
 
@@ -124,7 +126,7 @@ void enqueue_order(Order* order, Restaurant* restaurant){
 
 }
 Order* dequeue_order(Restaurant* restaurant){
-	(restaurant->num_pending_orders)--;
+	/*(restaurant->num_pending_orders)--;
 	Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
 	returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
 	if (restaurant->num_pending_orders == 1)
@@ -142,19 +144,20 @@ Order* dequeue_order(Restaurant* restaurant){
 		cur = cur->next;
 	}
 	// loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
-
-	/*struct Queue *queue = restaurant->pending_orders;
-	struct Order *order = queue->head->order; // It is guaranteed that the Queue is non-empty
-	struct QueueNode *temp = queue->head;
-	restaurant->num_pending_orders--;
-	restaurant->num_completed_orders++;
-	queue->head = queue->head->next;
-	if(!(queue->head)){
-		queue->tail = NULL;
+	*/
+	struct Queue *q = restaurant->pending_orders;
+	struct Order *o = q->head->order; // It is guaranteed that the Queue is non-empty
+	struct QueueNode *t = q->head;
+	(restaurant->num_pending_orders)--;
+	(restaurant->num_completed_orders)++;
+	q->head = q->head->next;
+	if(!(q->head)){
+		q->tail = NULL;
 	}
-	free(temp);
-	return order;
-}*/
+	free(t);
+	return o;
+
+}
 
 /*
 	Getting information about our orders and order status
@@ -165,7 +168,7 @@ double get_item_cost(char* item_code, Menu* menu){
 			return menu->item_cost_per_unit[i]; 
 		}
 	}
-	return 0;
+	//return 0;
 }
 
 double get_order_subtotal(Order* order, Menu* menu){
@@ -202,6 +205,7 @@ void clear_order(Order** order){
 	free((*order)->item_codes);
 	free((*order)->item_quantities);
 	free(*order);
+	*order=NULL;
 }
 
 void clear_menu(Menu** menu){
@@ -272,6 +276,7 @@ void print_receipt(Order* order, Menu* menu){
 	fprintf(stdout, "Tax %d%%: \t$%.2f\n", TAX_RATE, order_total);
 	fprintf(stdout, "              ========\n");
 }
+
 /*
 int main (){
 	print_menu(load_menu("menu.txt"));
