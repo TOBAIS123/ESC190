@@ -10,7 +10,13 @@ Menu* load_menu(char* fname){
 	int num_lines=0;
 
 	while(getline(&line, &len, f) != -1){
-		num_lines++;
+		for (int i = 0; i<strlen(line); i++){
+			if (line[i] != ' ' && line[i] != '\n' && line[i]!= '\0'&& line[i]!= '\r')
+			{
+				num_lines++;
+				break;
+			}
+		}
 	}
 		
 	menu->num_items=num_lines;
@@ -23,8 +29,24 @@ Menu* load_menu(char* fname){
 	for (int j=0; j<num_lines;j++){
 		getline(&line, &len, f);
 
+		int nwp;
+		
+		for (int i = 0; i<strlen(line); i++){
+			if (line[i] != '\0' && line[i] != '\n' && line[i]!= '\r'&& line[i]!= ' ') {
+				nwp = i;
+				break;
+			}
+		}
+		
+		char * l = (char*)malloc(sizeof(char)*(strlen(line)-nwp+1));
+		for (int k = 0; k<strlen(line); k++){
+			l[k] = line[k+nwp];
+		}
+		
+		l[strlen(line)-nwp] = '\0';
+		char *split = strtok(l, MENU_DELIM);
+
 		//insert whitespace stuff
-		char* split = strtok(line, MENU_DELIM);
 		menu->item_codes[j]=(char*)malloc(sizeof(char)*ITEM_CODE_LENGTH);
 		strcpy(menu->item_codes[j], split);
 
@@ -35,12 +57,12 @@ Menu* load_menu(char* fname){
 		split=strtok(NULL, MENU_DELIM);
 		char* cost=split+1;
 		menu->item_cost_per_unit[j] = strtod(cost,NULL);
+		free(l);
 	}
 	free(line);
 	fclose(f);
 	return menu;
 }
-
 /*
 Inputs <name> is a string literal.
 Output Return a pointer to a Restaurant with:
@@ -92,20 +114,23 @@ Order* build_order(char* items, char* quantities){
 	for (int j =0; j<item_len; j++){
 		order->item_codes[j]= (char*)malloc(sizeof(char)*ITEM_CODE_LENGTH);
 		strncpy(order->item_codes[j], items+(ITEM_CODE_LENGTH-1)*j,(ITEM_CODE_LENGTH-1));
+		order->item_codes[j][ITEM_CODE_LENGTH-1] = '\0'; 
 	}
 
 	free(temp_quant);
 	return order;
 }
 
+
 /*
 	Managing our order queue
 */
+
 void enqueue_order(Order* order, Restaurant* restaurant){
 	(restaurant->num_pending_orders)++;
 	QueueNode* node = (QueueNode*)malloc(sizeof(QueueNode));
-	Order* ord = (Order*)malloc(sizeof(Order));
-	node->order = ord;
+	//Order* ord = (Order*)malloc(sizeof(Order));
+	node->order = order;
 
 	if (restaurant->pending_orders->head==NULL){
 		restaurant->pending_orders->head=node;
@@ -125,43 +150,49 @@ void enqueue_order(Order* order, Restaurant* restaurant){
 	}
 
 }
-Order* dequeue_order(Restaurant* restaurant){
-	/*(restaurant->num_pending_orders)--;
-	Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
-	returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
-	if (restaurant->num_pending_orders == 1)
-	{
-		//free(&(restaurant->pending_orders->head->order));
-		free(&(restaurant->pending_orders->tail->next)); // frees the value of next not sure if this is needed - todo check
-		free((restaurant->pending_orders->tail)); // frees the value of tail node (the node)
-		restaurant->pending_orders->head=NULL;
-		restaurant->pending_orders->tail=NULL;
-	}
 
-	QueueNode* cur = restaurant->pending_orders->head->next;
-	for(int i = 1; i<restaurant->num_pending_orders-2; i++) // loop iterates to the third last element of the linkedlist
-	{
-		cur = cur->next;
-	}
-	// loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
-	*/
-	struct Queue *q = restaurant->pending_orders;
-	struct Order *o = q->head->order; // It is guaranteed that the Queue is non-empty
-	struct QueueNode *t = q->head;
+
+Order* dequeue_order(Restaurant* restaurant){
 	(restaurant->num_pending_orders)--;
 	(restaurant->num_completed_orders)++;
+	//(restaurant->num_pending_orders)--;
+	//Order* returnval = malloc(sizeof(Order*)); // allocates storage for the return value
+	//returnval = restaurant->pending_orders->tail->order; // sets the value that will be returned to the first order which was entered to the queue (FIFO order)
+	//if (restaurant->num_pending_orders == 1)
+	//{
+		//free(&(restaurant->pending_orders->head->order));
+		//free(&(restaurant->pending_orders->tail->next)); // frees the value of next not sure if this is needed - todo check
+		//free((restaurant->pending_orders->tail)); // frees the value of tail node (the node)
+		//restaurant->pending_orders->head=NULL;
+		//restaurant->pending_orders->tail=NULL;
+	//}
+
+	//QueueNode* cur = restaurant->pending_orders->head->next;
+	//for(int i = 1; i<restaurant->num_pending_orders-2; i++) // loop iterates to the third last element of the linkedlist
+	//{
+		//cur = cur->next;
+	//}
+	// loop iterates to the third last element of the linkedlist, gets the value of the node's 'next' pointer because that will soon be the pointer to the tail of the linkedlist, then it frees and sets the value of the next node's 'next' to null and makes tail point to the second last node
+	
+	struct Queue *q = restaurant->pending_orders;
+	struct Order *o = q->head->order;
+	struct QueueNode *t = q->head;
+	
 	q->head = q->head->next;
-	if(!(q->head)){
+	if(q->head==NULL){
 		q->tail = NULL;
 	}
 	free(t);
+	
 	return o;
 
 }
 
+
 /*
 	Getting information about our orders and order status
 */
+
 double get_item_cost(char* item_code, Menu* menu){
 	for(int i=0; i<menu->num_items; i++){
 		if(strcmp(menu->item_codes[i], item_code)==0){
@@ -222,11 +253,11 @@ void clear_menu(Menu** menu){
 
 
 void close_restaurant(Restaurant** restaurant){
+	clear_menu(&((*restaurant)->menu));
 	while((*restaurant)->num_pending_orders > 0){
 		Order* o = dequeue_order((*restaurant));
 		clear_order(&o);
 	}
-	clear_menu(&((*restaurant)->menu));
 	free((*restaurant)->name);
 	free((*restaurant)->pending_orders);
 	free(*restaurant);
@@ -280,7 +311,20 @@ void print_receipt(Order* order, Menu* menu){
 
 /*
 int main (){
-	print_menu(load_menu("menu.txt"));
-	Order* order = build_order("A1B1", "12,13");
-	print_order(order);
+	Menu* m = load_menu("menu.txt");
+	print_menu(m);
+	//clear_menu(&m);
+	//Order* order_1 = build_order("A1B1", "12,13");
+	//print_order(order_1);
+	
+	/*Restaurant* restaurant = initialize_restaurant("menu.txt");
+	Order* order_1 = build_order("A1B1", "12,13");
+	Order* order_2 = build_order("A1B1C1", "12,10,9");
+	
+	
+	enqueue_order(order_1 , restaurant );
+	enqueue_order(order_2 , restaurant );
+	clear_order(&order_1);
+	clear_order(&order_2);
+	close_restaurant (& restaurant );
 }*/
