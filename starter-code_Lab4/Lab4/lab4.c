@@ -65,20 +65,22 @@ PlayerRecord* add_match(
 	PlayerRecord* player_record = malloc(sizeof(PlayerRecord));
 	p1 -> parent = player_record;
 	p2 -> parent = player_record;
-	if (p1 -> game_records[WINS] > p2 -> game_records[WINS])
+	if (p1_wins > p2_wins)
 	{
 		player_record -> player = p1 -> player;
 		player_record -> left_child = p2;
 		player_record -> right_child = p1;
+		player_record -> game_records[WINS] = p1_wins;
+		player_record -> game_records[LOSSES] = p2_wins;
 	}
 	else
 	{
 		player_record -> player = p2 -> player;
 		player_record -> left_child = p1;
 		player_record -> right_child = p2;
+		player_record -> game_records[WINS] = p2_wins;
+		player_record -> game_records[LOSSES] = p1_wins;
 	}
-	player_record -> game_records[WINS] = 0;
-	player_record -> game_records[LOSSES] = 0;
 }
 
 int get_player_rank(char player_id[], PlayerRecord* root){
