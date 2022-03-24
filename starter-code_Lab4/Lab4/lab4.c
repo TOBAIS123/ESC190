@@ -81,6 +81,7 @@ PlayerRecord* add_match(
 		player_record -> game_records[WINS] = p2_wins;
 		player_record -> game_records[LOSSES] = p1_wins;
 	}
+	return player_record;
 }
 
 int get_player_rank(char player_id[], PlayerRecord* root){
@@ -95,7 +96,7 @@ int get_player_rank(char player_id[], PlayerRecord* root){
 		return -1;
 	}
 
-	int dist = -1;
+	int dist = 0;
 
 	if (strcmp(root -> player -> id, player_id) == 0 || (dist = get_player_rank(player_id, root->left_child)) >= 0 || (dist = get_player_rank(player_id, root->right_child)) >= 0)
 	{
@@ -266,4 +267,5 @@ void print_with_rank(PlayerRecord* root){
 	
 	free(players_at_curr_rank);
 }
+
 

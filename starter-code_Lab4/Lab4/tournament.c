@@ -1,10 +1,7 @@
 #include "lab4.h"
 
 int main(){	
-	printf("start of lab4 program\n");
 	Player* p1 = create_player("Noob_player", "N01");
-	printf("player1: %s, %s", p1->name, p1->id);
-	printf("done\n");
 	Player* p2 = create_player("Beginner0101", "B06");
 	
 	Player* p3 = create_player("FunnyGuy", "F22");
@@ -49,9 +46,11 @@ int main(){
 		round2_outcome1, round2_outcome2, 
 		8, 13
 	);
-	
+	printf("hello\n");
 	print_tournament_records(round3_outcome, round3_outcome);
+	printf("hi\n");
 	print_with_rank(round3_outcome);
+	printf("hi\n");
 	
 	//Deallocate all memory that was allocated
 	clear_tournament_records(&round3_outcome);
