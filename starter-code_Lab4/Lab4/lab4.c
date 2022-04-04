@@ -63,6 +63,7 @@ PlayerRecord* add_match(
 	<p1->parent> and <p2->parent> are guaranteed to be NULL.
 	*/
 	PlayerRecord* player_record = malloc(sizeof(PlayerRecord));
+	printf("round winner: %d\n", p2 -> game_records[WINS]);
 	p1 -> parent = player_record;
 	p2 -> parent = player_record;
 	if (p1_wins > p2_wins)
