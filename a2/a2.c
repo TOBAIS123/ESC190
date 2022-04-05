@@ -38,7 +38,8 @@ int bin_to_dec(int bin)
 }
 
 char *xor_encrypt(char c){
-    char* encrypted_string = malloc(7);
+    char* encrypted_string = malloc(8);
+    encrypted_string[7] = '\0';
     int value = dec_to_bin(bitwise_xor((int)c));
     for (int i = 0; i < 7; i++)
     {
@@ -54,11 +55,87 @@ char xor_decrypt(char *s){
     {
         value += ((int)(s[6-i])-48)*pow(10, i);
     }
-    return (int)bitwise_xor(bin_to_dec(value))-48;
+    return (char)bitwise_xor(bin_to_dec(value))-48;
 }
 
 char *gen_code(char *msg){
-    //add code here;
+    char* code = malloc(257);
+    char full_msg[255];
+    int msg_len = 0;
+    while (msg[msg_len] != '\0')
+    {
+        msg_len++;
+    }
+    for (int x = 0; x<256;x++)
+    {
+        code[x] = '0';
+        full_msg[x] = '0';
+    }
+    printf("msg_len: %d\n", msg_len);
+    for (int x = 0; x < msg_len; x++)
+    {
+        char* this_msg = xor_encrypt(msg[x]);
+        printf("msg[x]: %c %s\n", msg[x], xor_encrypt(msg[x]));
+        for (int k = 0; k < 7; k++)
+        {
+            full_msg[x*7+k] = this_msg[k];
+        }
+    }
+    code[256] = '\0';
+    int x = 0;
+    for (int i = 0; i < 256; i++)
+    {
+        if ((i / 16 == 0 || i / 16 == 4 || (i / 16 == 11 && (int)(i%16) < 5) || i / 16 == 15 && (int)(i%16) < 5) && ((int)(i%15) < 5 || (int)(i%16) > 10)) // Outer box rows
+        {
+            code[i] = '1';
+        }
+        else if ((int)(i / 16) == 4 && i%16 > -1 && i%16<5) // Rows
+        {
+            code[i] = '1';
+        }
+        else if ((int)(i / 16) == 11 && (i%16)<5)
+        {
+            code[i] = '1';
+        }
+        else if ((i % 16 == 0 || i % 16 == 4 || (i % 16 == 11 && (int)(i/16) < 5) || i % 16 == 15 && (int)(i/16) < 5) && ((int)(i/15) < 5 || (int)(i/16) > 10)) // Outer box columns
+        {
+            code[i] = '1';
+        }
+        else if ((((i % 16) == 2) && ((int)(i/16) == 2||(int)(i/16) == 13))|| (((i % 16) == 13) && (int)(i/16)==2)) // Inner squares
+        {
+            code[i] = '1';
+        }
+        else if (i == 255) // Bottom right square
+        {
+            code[i] = '1';
+        }
+        else if ((i%16) < 5 && (int)(i/16)<5)
+        {
+
+        }
+        else if ((i%16) > 10 && (int)(i/16)<5)
+        {
+
+        }
+        else if ((i%16) < 5 && (int)(i/16)>10)
+        {
+            
+        }
+        else
+        {
+            code[i] = full_msg[x];
+            x++;
+        }
+    }
+    for (int j = 0; j<16; j++)
+    {
+        for (int x = 0; x<16;x++)
+        {
+            printf("%c", code[16*j+x]);
+        }
+        printf("\n");
+    }
+    printf("\n\n");
 }
 
 char *read_code(char *code){
