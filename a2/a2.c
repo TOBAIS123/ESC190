@@ -26,20 +26,25 @@ int dec_to_bin(int dec)
 
 int bin_to_dec(int bin)
 {
-    
+    int dec = 0;
+    int i=0;
+    while (bin > 0)
+    {
+        dec += (2 * bin % 10)*pow(2, i);
+        bin = (int)(bin / 10);
+        i++;
+    }
+    return dec;
 }
 
 char *xor_encrypt(char c){
     char* encrypted_string = malloc(7);
     int value = dec_to_bin(bitwise_xor((int)c));
-    printf("%d\n", value);
     for (int i = 0; i < 7; i++)
     {
-        printf("char: %c\n", (char)((value % 10)+48));
         encrypted_string[6-i] = (char)((value % 10)+48);
         value = (int)(value/10);
     }
-    printf("encrypted_string: %s\n", encrypted_string);
     return encrypted_string;
 }
 
@@ -49,8 +54,7 @@ char xor_decrypt(char *s){
     {
         value += ((int)(s[6-i])-48)*pow(10, i);
     }
-    bitwise_xor(value
-    printf("value: %d\n", value);
+    return (int)bitwise_xor(bin_to_dec(value))-48;
 }
 
 char *gen_code(char *msg){
