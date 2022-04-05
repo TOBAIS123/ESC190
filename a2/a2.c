@@ -53,9 +53,10 @@ char xor_decrypt(char *s){
     int value = 0;
     for (int i = 0; i < 7; i++)
     {
-        value += ((int)(s[6-i])-48)*pow(10, i);
+        value += (((int)(s[6-i]))-48)*(int)(pow(2, i));
+        //printf("value+=%d\n", (((int)(s[6-i]))-48)*(int)(pow(2, i)));
     }
-    return (char)(bitwise_xor(bin_to_dec(value)));
+    return (char)(bitwise_xor(value));
 }
 
 char *gen_code(char *msg){
@@ -75,7 +76,7 @@ char *gen_code(char *msg){
     for (int x = 0; x < msg_len+1; x++)
     {
         char* this_msg = xor_encrypt(msg[x]);
-        printf("msg[x]: %c %s\n", msg[x], xor_encrypt(msg[x]));
+        //printf("msg[x]: %c %s %c\n", msg[x], xor_encrypt(msg[x]), xor_decrypt(xor_encrypt(msg[x])));
         for (int k = 0; k < 7; k++)
         {
             full_msg[x*7+k] = this_msg[k];
@@ -140,7 +141,7 @@ char *gen_code(char *msg){
 }
 
 char *read_code(char *code){
-    printf("hi\n");
+    //printf("hi\n");
     char* msg = malloc(26);
     char full_msg[8] = "";
     int x = 0;
@@ -176,12 +177,12 @@ char *read_code(char *code){
         }
         else
         {
-            printf("code[i]: %c\n", code[i]);
+            //printf("code[i]: %c\n", code[i]);
             full_msg[x] = code[i];
             if (x == 6)
             {
-                printf("full_msg: %s\n", full_msg);
-                printf("xor_decrypt: %c\n", xor_decrypt(full_msg));
+                //printf("full_msg: %s\n", full_msg);
+                //printf("xor_decrypt: %c\n", xor_decrypt(full_msg));
                 msg[r] = xor_decrypt(full_msg);
                 x = -1;
                 r++;
@@ -189,8 +190,8 @@ char *read_code(char *code){
             x++;
         }
     }
-    printf("hello");
-    printf("msg: %s\n", msg);
+    //printf("hello");
+    //printf("msg: %s\n", msg);
     return msg;
 }
 
