@@ -12,3 +12,5 @@ char *read_code(char *code);
 char *compress(char *code);
 char *decompress(char *code);
 int calc_ld(char *sandy, char *cima);
+int dec_to_bin(int dec);
+int bin_to_dec(int bin);
