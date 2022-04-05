@@ -55,7 +55,7 @@ char xor_decrypt(char *s){
     {
         value += ((int)(s[6-i])-48)*pow(10, i);
     }
-    return (char)bitwise_xor(bin_to_dec(value))-48;
+    return (char)(bitwise_xor(bin_to_dec(value)));
 }
 
 char *gen_code(char *msg){
@@ -71,8 +71,8 @@ char *gen_code(char *msg){
         code[x] = '0';
         full_msg[x] = '0';
     }
-    printf("msg_len: %d\n", msg_len);
-    for (int x = 0; x < msg_len; x++)
+    //printf("msg_len: %d\n", msg_len);
+    for (int x = 0; x < msg_len+1; x++)
     {
         char* this_msg = xor_encrypt(msg[x]);
         printf("msg[x]: %c %s\n", msg[x], xor_encrypt(msg[x]));
@@ -127,19 +127,71 @@ char *gen_code(char *msg){
             x++;
         }
     }
-    for (int j = 0; j<16; j++)
-    {
-        for (int x = 0; x<16;x++)
-        {
-            printf("%c", code[16*j+x]);
-        }
-        printf("\n");
-    }
-    printf("\n\n");
+    // for (int j = 0; j<16; j++)
+    // {
+    //     for (int x = 0; x<16;x++)
+    //     {
+    //         printf("%c", code[16*j+x]);
+    //     }
+    //     printf("\n");
+    // }
+    // printf("\n\n");
+    return code;
 }
 
 char *read_code(char *code){
-    //add code here
+    printf("hi\n");
+    char* msg = malloc(26);
+    char full_msg[8] = "";
+    int x = 0;
+    int r = 0;
+    for (int i = 0; i < 256; i++)
+    {
+        if ((i / 16 == 0 || i / 16 == 4 || (i / 16 == 11 && (int)(i%16) < 5) || i / 16 == 15 && (int)(i%16) < 5) && ((int)(i%15) < 5 || (int)(i%16) > 10)) // Outer box rows
+        {
+        }
+        else if ((int)(i / 16) == 4 && i%16 > -1 && i%16<5) // Rows
+        {
+        }
+        else if ((int)(i / 16) == 11 && (i%16)<5)
+        {
+        }
+        else if ((i % 16 == 0 || i % 16 == 4 || (i % 16 == 11 && (int)(i/16) < 5) || i % 16 == 15 && (int)(i/16) < 5) && ((int)(i/15) < 5 || (int)(i/16) > 10)) // Outer box columns
+        {
+        }
+        else if ((((i % 16) == 2) && ((int)(i/16) == 2||(int)(i/16) == 13))|| (((i % 16) == 13) && (int)(i/16)==2)) // Inner squares
+        {
+        }
+        else if (i == 255) // Bottom right square
+        {
+        }
+        else if ((i%16) < 5 && (int)(i/16)<5)
+        {
+        }
+        else if ((i%16) > 10 && (int)(i/16)<5)
+        {
+        }
+        else if ((i%16) < 5 && (int)(i/16)>10)
+        {
+        }
+        else
+        {
+            printf("code[i]: %c\n", code[i]);
+            full_msg[x] = code[i];
+            if (x == 6)
+            {
+                printf("full_msg: %s\n", full_msg);
+                printf("xor_decrypt: %c\n", xor_decrypt(full_msg));
+                msg[r] = xor_decrypt(full_msg);
+                x = -1;
+                r++;
+            }
+            x++;
+        }
+    }
+    printf("hello");
+    printf("msg: %s\n", msg);
+    return msg;
 }
 
 char *compress(char *code){
