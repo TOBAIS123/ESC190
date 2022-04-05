@@ -199,7 +199,23 @@ char *read_code(char *code){
 }
 
 char *compress(char *code){
-    //add code here
+    char* hex_code = malloc(65);
+    int cur_val = 0;
+    char cur_char = '0';
+    for (int i = 0; i < 256; i+=4)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            cur_val += (((int)(code[i+4-j]))-48)*((int)(pow(2, j)));
+        }
+        cur_char = (char)(cur_val+48);
+        if (cur_char > '9')
+        {
+            cur_char += 58;
+        }
+        hex_code[(int)(i/4)] = cur_char;
+    }
+    return hex_code;
 }
 
 char *decompress(char *code){
