@@ -1,6 +1,7 @@
 {
     "ros.distro": "noetic",
     "files.associations": {
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "a2.h": "c"
     }
 }
