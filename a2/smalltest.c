@@ -12,6 +12,7 @@ int main(){
     char *msg = read_code(code);
     printf("%s\n", msg);
     free(msg);
+    free(code);
     printf("done\n");
 
     // // Task 3

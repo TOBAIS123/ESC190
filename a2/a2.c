@@ -81,6 +81,7 @@ char *gen_code(char *msg){
         {
             full_msg[x*7+k] = this_msg[k];
         }
+        free(this_msg);
     }
     code[256] = '\0';
     int x = 0;
@@ -137,6 +138,8 @@ char *gen_code(char *msg){
     //     printf("\n");
     // }
     // printf("\n\n");
+    printf("done1\n");
+    printf("code: %s\n", code);
     return code;
 }
 
