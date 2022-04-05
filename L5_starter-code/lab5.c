@@ -46,22 +46,7 @@ char **plan_route(Graph *gr, char *start, char *dest)
                     pred[i] = nextnode;
                 }
         count++;
-    }
-
-    // print the path and distance of each node
-    for (i = 0; i < n; i++)
-        if (i != startnode)
-        {
-            printf("\nDistance of node%d=%d", i, distance[i]);
-            printf("\nPath=%d", i);
-            j = i;
-            do
-            {
-                j = pred[j];
-                printf("<-%d", j);
-            } while (j != startnode);
-        }
-        */
+    }*/
 }
 
 void add(Graph *gr, char *station)
@@ -79,7 +64,7 @@ void add(Graph *gr, char *station)
     node->prev=NULL;
     node->visited=0;
     strcpy(node->station, station);
-    gr->adj_list = realloc(gr->adj_list, sizeof(int *) * (gr->count + 1)); // new row
+    gr->adj_list = realloc(gr->adj_list, sizeof(Vnode *) * (gr->count + 1)); // new row
     gr->adj_list[gr->count] = node;
     gr->count+=1;
 }
@@ -91,5 +76,11 @@ void update(Graph *gr, char *start, char *dest, int weight)
 
 void disrupt(Graph *gr, char *station)
 {
-    // Add code here
+    for (int i = 0; i <= gr->count; i++)
+    {
+        if (strcmp(gr->adj_list[i]->station, station) == 0)
+        {
+            return;
+        }
+    }
 }
