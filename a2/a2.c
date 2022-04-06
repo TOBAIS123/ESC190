@@ -200,6 +200,7 @@ char *read_code(char *code){
 
 char *compress(char *code){
     char* hex_code = malloc(65);
+    hex_code[64] = '\0';
     int cur_val = 0;
     char cur_char = '0';
     for (int i = 0; i < 256; i+=4)
