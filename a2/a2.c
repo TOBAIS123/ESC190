@@ -257,7 +257,86 @@ char *decompress(char *code){
 }
 
 int calc_ld(char *sandy, char *cima){
-    //add code here
+    //printf("Start\n");
+    //printf("Cima1: %s\n", cima);
+    int sandy_len = strlen(sandy);
+    int cima_len = strlen(cima);
+    //printf("Cima: %s\n", cima);
+    char sandy1[sandy_len+1];
+    char cima1[cima_len+1];
+    for (int i = 0; i < sandy_len + 1; i++)
+    {
+        sandy1[i] = '\0';
+    }
+    for (int i = 0; i < cima_len + 1; i++)
+    {
+        cima1[i] = '\0';
+    }
+    strcpy(cima1, cima);
+    strcpy(sandy1, sandy);
+    //printf("sandy1: %s, cima1: %s\n", sandy1, cima1);
+
+    //printf("1\n");
+    // printf("sandy_len: %d\n", sandy_len);
+    // printf("cima_len: %d\n", cima_len);
+    if (sandy_len == 0)
+    {
+        //printf("sandy\n");
+        //exit(cima_len);
+        return cima_len;
+    }
+    else if (cima_len == 0)
+    {
+        //printf("cima");
+        return sandy_len;
+    }
+    else if (sandy1[sandy_len-1] == cima1[cima_len-1])
+    {
+        //printf("hoinhoin: %d\n", strlen(cima1));
+        sandy1[sandy_len-1] = '\0';
+        cima1[cima_len-1] = '\0';
+        //printf("cimaahsoient: %d\n", strlen(cima1));
+        return calc_ld(sandy1, cima1);
+    }
+    else
+    {
+        char temp_char1, temp_char2;
+        
+        //printf("3\n");
+        temp_char1 = cima1[cima_len-1];
+        //printf("3.1\n");
+        //printf("%c\n", cima1[4]);
+        cima1[cima_len-1] = '\0';
+        //printf("3.2\n");
+        //printf("sandy1: %s, cima1: %s\n", sandy1, cima1);
+        int ld1 = calc_ld(sandy1, cima1);
+        //printf("3.3\n");
+        cima1[cima_len-1] = temp_char1;
+
+        //printf("4\n");
+        temp_char2 = sandy1[sandy_len-1];
+        sandy1[sandy_len-1] = '\0';
+        int ld2 = calc_ld(sandy1, cima1);
+        sandy1[sandy_len-1] = temp_char2;
+
+        //printf("5\n");
+        sandy1[sandy_len-1] = '\0';
+        cima1[cima_len-1] = '\0';
+        int ld3 = calc_ld(sandy1, cima1);
+
+        cima1[cima_len-1] = temp_char1;
+        sandy1[sandy_len-1] = temp_char2;
+
+        int min = 500000;
+        if (ld1 < min)
+            min = ld1;
+        if (ld2 < min)
+            min = ld2;
+        if (ld3 < min)
+            min = ld3;
+        //printf("%d", min);
+        return 1 + min;
+    }
 }
 
 // int main(void)

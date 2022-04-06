@@ -27,8 +27,10 @@ int main(){
     free(samehexcode);
 
     
-    // // Task 4
-    // printf("%d\n", calc_ld("COMMENCE", "CODING"));
-    // printf("%d\n", calc_ld("COMMENCE", "PROCRASTINATING"));
+    // Task 4
+    printf("start1\n");
+    printf("\nheyo%d\n", calc_ld("COMMENCE", "CODING"));
+    printf("start2\n");
+    printf("%d\n", calc_ld("COMMENCE", "PROCRASTINATING"));
     return 0;
 }
