@@ -206,13 +206,16 @@ char *compress(char *code){
     {
         for (int j = 0; j < 4; j++)
         {
-            cur_val += (((int)(code[i+4-j]))-48)*((int)(pow(2, j)));
+            printf("iteration: %d, num: %d, code: %c, vals: %d\n", i+j, (int)code[i+4-j], code[i+3-j], (((int)(code[i+3-j]))-48)*((int)(pow(2, j))));
+            cur_val += (((int)(code[i+3-j]))-48)*((int)(pow(2, j)));
         }
         cur_char = (char)(cur_val+48);
+        cur_val = 0;
         if (cur_char > '9')
         {
-            cur_char += 58;
+            cur_char += 7;
         }
+        printf("char: %c\n", (char)(cur_char));
         hex_code[(int)(i/4)] = cur_char;
     }
     return hex_code;
