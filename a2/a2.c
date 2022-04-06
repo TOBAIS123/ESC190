@@ -207,7 +207,7 @@ char *compress(char *code){
     {
         for (int j = 0; j < 4; j++)
         {
-            printf("iteration: %d, num: %d, code: %c, vals: %d\n", i+j, (int)code[i+4-j], code[i+3-j], (((int)(code[i+3-j]))-48)*((int)(pow(2, j))));
+            //printf("iteration: %d, num: %d, code: %c, vals: %d\n", i+j, (int)code[i+4-j], code[i+3-j], (((int)(code[i+3-j]))-48)*((int)(pow(2, j))));
             cur_val += (((int)(code[i+3-j]))-48)*((int)(pow(2, j)));
         }
         cur_char = (char)(cur_val+48);
@@ -216,14 +216,44 @@ char *compress(char *code){
         {
             cur_char += 7;
         }
-        printf("char: %c\n", (char)(cur_char));
+        //printf("char: %c\n", (char)(cur_char));
         hex_code[(int)(i/4)] = cur_char;
     }
     return hex_code;
 }
 
 char *decompress(char *code){
-    //add code here
+    char* bin_code = malloc(257);
+    char cur_char;
+    int cur_int;
+    int bin_int;
+    for (int i = 0; i < 64; i++)
+    {
+        cur_char = (char)(code[i]);
+        if (cur_char > '9')
+        {
+            cur_int = ((int)(cur_char))-55;
+            //printf("cur_int: %d\n", cur_int);
+        }
+        else
+        {
+            cur_int = ((int)(cur_char))-48;
+            //printf("cur_int: %d\n", cur_int);
+        }
+        bin_int = dec_to_bin(cur_int);
+        //printf("bin_int: %d\n", bin_int);
+        //printf("bin_code here: ");
+        for (int j = 0; j < 4; j++)
+        {
+            bin_code[4*i+3-j] = (char)((bin_int % 10)+48);
+            bin_int = bin_int / 10;
+            //printf("%c", bin_code[4*i+3-j]);
+        }
+        //printf("\n");
+    }
+    bin_code[256] = '\0';
+    //printf("bin_code: %s\n", bin_code);
+    return bin_code;
 }
 
 int calc_ld(char *sandy, char *cima){
