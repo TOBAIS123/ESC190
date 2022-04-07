@@ -2,8 +2,6 @@
 
 char **plan_route(Graph *gr, char *start, char *dest)
 {
-
-    // Add code here
     /*
     int cost[MAX][MAX], distance[MAX], pred[MAX];
     int visited[MAX], count, mindistance, nextnode, i, j;
@@ -71,11 +69,34 @@ void add(Graph *gr, char *station)
 
 void update(Graph *gr, char *start, char *dest, int weight)
 {
-    // Add code here
+    // if weight 0
+    if (weight == 0){
+        /*
+        check to see if start is in graph, find idx
+            iterate edges of start until destination is reached
+            if reached, delete node
+            if niether found, return
+
+        */
+    }
+    //if weight !0
+    else{
+        /*
+        check to see if start is in graph, find idx
+            if not, add to graph
+        check if dest is in graph, find idx
+            if not add to graph
+        check to see if edge b/w start and dest exists
+            do this by iterating from start nodes edge until destination is found
+                add edge if not found
+        change edge value b/w start and dest to weight
+*/
+    }
 }
 
 void disrupt(Graph *gr, char *station)
 {
+    //iterate to find if vertex w/ station exists
     for (int i = 0; i <= gr->count; i++)
     {
         if (strcmp(gr->adj_list[i]->station, station) == 0)
@@ -83,4 +104,7 @@ void disrupt(Graph *gr, char *station)
             return;
         }
     }
+    //
+
+
 }
