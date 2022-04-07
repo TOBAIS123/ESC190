@@ -136,31 +136,46 @@ void update(Graph *gr, char *start, char *dest, int weight)
 
 void disrupt(Graph *gr, char *station)
 {
-    if(!(findNode(gr, station))){
+    int idx;
+    for(int i = 0; i < gr->count; i++){
+        if(strcmp(gr->adj_list[i]->station, station) == 0){
+            idx = i;
+        }
+    }
+
+    Vnode* cur=gr->adj_list[idx];
+
+    
+    if(!(cur)){
         return;
     }
-    for (int i = 0; i < gr->count; i++) {
-        if (strcmp(gr->adj_list[i]->station, station)==0) {
-            while (gr->adj_list[i]->edges != NULL) { 
-                Enode* temp_edge = gr->adj_list[i]->edges;
-                gr->adj_list[i]->edges = gr->adj_list[i]->edges->next;
-                free(temp_edge);
-                temp_edge = NULL;
-            }
-            gr->adj_list[i]->edges = NULL;
-        }
-        else {
-              while (gr->adj_list[i]->edges != NULL){ 
-                Enode* prev = NULL;
-                if (strcmp(gr->adj_list[i]->edges->vertex, station)==0) { 
-                    Enode* temp = prev->next;
-                    prev->next = prev->next->next;
-                    free(temp);
-                    break; 
-                }
-                gr->adj_list[i]->edges=gr->adj_list[i]->edges->next;
-            }
-        }
-    
+    while (cur->edges != NULL) { 
+        Enode* temp_edge = cur->edges;
+        cur->edges = cur->edges->next;
+        free(temp_edge);
+        temp_edge = NULL;
     }
+    cur->edges = NULL;
+    free(cur);
+    
+    for(int i = idx; i < gr->count-1; i++){
+        cur = gr->adj_list[i+1];
+    }
+    gr->adj_list[(gr->count)-1]= NULL;
+    gr->count -= 1;
+
+    for (int i = 0; i < gr->count; i++) {
+        while (gr->adj_list[i]->edges != NULL){ 
+            Enode* prev = gr->adj_list[i]->edges;
+            if (strcmp(gr->adj_list[i]->edges->vertex, station)==0) { 
+                Enode* temp = prev->next;
+                prev->next = prev->next->next;
+                free(temp);
+                break; 
+            }
+            gr->adj_list[i]->edges=gr->adj_list[i]->edges->next;
+        }
+    }
+
 }
+

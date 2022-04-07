@@ -22,12 +22,12 @@ int main(){
     /*
     char **r = plan_route(gr, "Kipling", "Don Mills");
     print_route(r, "Kipling");
-    
+    */
     //Bye bye Bay!
 
     disrupt(gr, "Bay");
     print_gr(gr);
-    
+    /*
     //r = plan_route(gr, "Kipling", "Don Mills");
     //print_route(r, "Kipling");
 
