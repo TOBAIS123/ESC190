@@ -1,7 +1,21 @@
 #include "lab5.h"
 
+
+Vnode* findNode(Graph* gr, char* station){
+    for (int i=0; i<gr->count;i++){
+        if (!strcmp(gr->adj_list[i]->station, station)) { 
+            return gr->adj_list[i]->station;
+        }
+    }
+    return NULL; // not found
+}
+
+
+
 char **plan_route(Graph *gr, char *start, char *dest)
 {
+
+    // Add code here
     /*
     int cost[MAX][MAX], distance[MAX], pred[MAX];
     int visited[MAX], count, mindistance, nextnode, i, j;
@@ -49,12 +63,18 @@ char **plan_route(Graph *gr, char *start, char *dest)
 
 void add(Graph *gr, char *station)
 {
-    for (int i = 0; i <= gr->count; i++)
+    for (int i = 0; i < gr->count; i++)
     {
         if (strcmp(gr->adj_list[i]->station, station) == 0)
         {
             return;
         }
+    }
+    if (gr->count == 0) { // if no nodes
+        gr->adj_list = (Vnode**) malloc(sizeof(Vnode*));
+    }
+    else{
+        gr->adj_list = realloc(gr->adj_list, sizeof(Vnode *) * (gr->count + 1)); // new row
     }
     Vnode *node = malloc(sizeof(Vnode));
     node->cost=0;
@@ -62,49 +82,58 @@ void add(Graph *gr, char *station)
     node->prev=NULL;
     node->visited=0;
     strcpy(node->station, station);
-    gr->adj_list = realloc(gr->adj_list, sizeof(Vnode *) * (gr->count + 1)); // new row
     gr->adj_list[gr->count] = node;
     gr->count+=1;
 }
 
 void update(Graph *gr, char *start, char *dest, int weight)
 {
-    // if weight 0
-    if (weight == 0){
-        /*
-        check to see if start is in graph, find idx
-            iterate edges of start until destination is reached
-            if reached, delete node
-            if niether found, return
-
-        */
+    Vnode* startn=NULL;
+    Vnode* destn=NULL;
+    if(!(startn = findNode(gr, start))){
+      add(gr, start);
     }
-    //if weight !0
+    if(!(destn = findNode(gr, start))){
+      add(gr, dest);
+    }
+
+    if (weight==0){
+
+    }
     else{
-        /*
-        check to see if start is in graph, find idx
-            if not, add to graph
-        check if dest is in graph, find idx
-            if not add to graph
-        check to see if edge b/w start and dest exists
-            do this by iterating from start nodes edge until destination is found
-                add edge if not found
-        change edge value b/w start and dest to weight
-*/
+
     }
 }
 
 void disrupt(Graph *gr, char *station)
 {
-    //iterate to find if vertex w/ station exists
-    for (int i = 0; i <= gr->count; i++)
-    {
-        if (strcmp(gr->adj_list[i]->station, station) == 0)
-        {
-            return;
-        }
+    if(!(findNode(gr, station))){
+        return;
     }
-    //
-
+    Enode* temp_edge=NULL;
+    for (int i = 0; i < gr->count; i++) {
+        if (strcmp(gr->adj_list[i]->station, station)==0) {
+            while (gr->adj_list[i]->edges->next != NULL) { 
+                temp_edge = gr->adj_list[i]->edges;
+                gr->adj_list[i]->edges = gr->adj_list[i]->edges->next;
+                free(temp_edge);
+                temp_edge = NULL;
+            }
+            gr->adj_list[i]->edges = NULL;
+        }
+        else {
+              for (gr->adj_list[i]->edges != NULL) { 
+                Enode* prev = NULL;
+                if (strcmp(gr->adj_list[i]->edges->vertex, station)==0) { 
+                    Enode* temp = prev->next;
+                    prev->next = prev->next->next;
+                    free(temp);
+                    break; 
+                }
+                gr->adj_list[i]->edges=gr->adj_list[i]->edges->next;
+            }
+        }
+    
+    }
 
 }

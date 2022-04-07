@@ -6,7 +6,7 @@ int main(){
     add(gr, "Kipling");
     add(gr, "Spadina");
     add(gr, "Yorkdale");
-    
+    /*
     update(gr, "Kipling", "Spadina", 12);
     update(gr, "Spadina", "Yorkdale", 8);
     update(gr, "Spadina", "Bay", 2);
@@ -17,8 +17,9 @@ int main(){
     update(gr, "Bloor-Yonge", "Sheppard-Yonge", 11);
     update(gr, "Sheppard-Yonge", "Finch", 3);
     update(gr, "Sheppard-Yonge", "Don Mills", 6);
-    
+    */
     print_gr(gr);
+    /*
     char **r = plan_route(gr, "Kipling", "Don Mills");
     print_route(r, "Kipling");
 
@@ -35,6 +36,7 @@ int main(){
     r = plan_route(gr, "Kipling", "Don Mills");
     print_route(r, "Kipling");
     
+    */
     free_gr(gr);
     return 0;
 }
