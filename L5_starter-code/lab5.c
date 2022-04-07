@@ -4,19 +4,18 @@
 Vnode* findNode(Graph* gr, char* station){
     for (int i=0; i<gr->count;i++){
         if (!strcmp(gr->adj_list[i]->station, station)) { 
-            return gr->adj_list[i]->station;
+            return gr->adj_list[i];
         }
     }
     return NULL; // not found
 }
 
 
-
+/*
 char **plan_route(Graph *gr, char *start, char *dest)
 {
 
-    // Add code here
-    /*
+    // Add code here 
     int cost[MAX][MAX], distance[MAX], pred[MAX];
     int visited[MAX], count, mindistance, nextnode, i, j;
     // pred[] stores the predecessor of each node
@@ -58,9 +57,10 @@ char **plan_route(Graph *gr, char *start, char *dest)
                     pred[i] = nextnode;
                 }
         count++;
-    }*/
+    }
+    return;
 }
-
+*/
 void add(Graph *gr, char *station)
 {
     for (int i = 0; i < gr->count; i++)
@@ -88,33 +88,61 @@ void add(Graph *gr, char *station)
 
 void update(Graph *gr, char *start, char *dest, int weight)
 {
-    Vnode* startn=NULL;
-    Vnode* destn=NULL;
-    if(!(startn = findNode(gr, start))){
+    Vnode* startn=findNode(gr, start);
+    Vnode* destn=destn = findNode(gr, start);
+    if(!startn){
       add(gr, start);
     }
-    if(!(destn = findNode(gr, start))){
+    if(!destn){
       add(gr, dest);
     }
 
     if (weight==0){
-
+        while (startn->edges != NULL){ 
+            Enode* prev = NULL;
+            if (strcmp(startn->edges->vertex, dest)==0) { 
+                Enode* temp = prev->next;
+                prev->next = prev->next->next;
+                free(temp);
+                break; 
+            }
+            startn->edges=startn->edges->next;
+        }       
     }
     else{
+        Enode* e;
+        Enode* prev = NULL;
+        for (e = startn->edges; e; e = e->next) { // loop through edges of cur (until becomes NULL)
+            if (!strcmp(e->vertex, dest)) { // if the edge already exists
+                e->weight = weight;
+                return;
+            }
+            prev = e;
+        }
+        //no edge
+        Enode* edge = (Enode*) malloc(sizeof(Enode));
+        strcpy(edge->vertex, dest);
+        edge->weight = weight;
+        edge->next = NULL;
+        if (!prev) { 
+            startn->edges = edge;
+        } else {
+            prev->next = edge; 
+        }
 
     }
 }
+
 
 void disrupt(Graph *gr, char *station)
 {
     if(!(findNode(gr, station))){
         return;
     }
-    Enode* temp_edge=NULL;
     for (int i = 0; i < gr->count; i++) {
         if (strcmp(gr->adj_list[i]->station, station)==0) {
-            while (gr->adj_list[i]->edges->next != NULL) { 
-                temp_edge = gr->adj_list[i]->edges;
+            while (gr->adj_list[i]->edges != NULL) { 
+                Enode* temp_edge = gr->adj_list[i]->edges;
                 gr->adj_list[i]->edges = gr->adj_list[i]->edges->next;
                 free(temp_edge);
                 temp_edge = NULL;
@@ -122,7 +150,7 @@ void disrupt(Graph *gr, char *station)
             gr->adj_list[i]->edges = NULL;
         }
         else {
-              for (gr->adj_list[i]->edges != NULL) { 
+              while (gr->adj_list[i]->edges != NULL){ 
                 Enode* prev = NULL;
                 if (strcmp(gr->adj_list[i]->edges->vertex, station)==0) { 
                     Enode* temp = prev->next;
@@ -135,5 +163,4 @@ void disrupt(Graph *gr, char *station)
         }
     
     }
-
 }
