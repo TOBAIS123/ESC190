@@ -147,7 +147,7 @@ void add(Graph *gr, char *station)
 void update(Graph *gr, char *start, char *dest, int weight)
 {
     Vnode *startn = findNode(gr, start);
-    Vnode *destn = findNode(gr, start);
+    Vnode *destn = findNode(gr, dest);
     if (!startn)
     {
         add(gr, start);
@@ -176,8 +176,8 @@ void update(Graph *gr, char *start, char *dest, int weight)
         }
         // no edge
         Enode *edge = (Enode *)malloc(sizeof(Enode));
-        edge->weight = weight;
         strcpy(edge->vertex, dest);
+        edge->weight = weight;
         edge->next = NULL;
         if (!prev)
         {
