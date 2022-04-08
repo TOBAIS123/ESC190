@@ -146,42 +146,40 @@ void add(Graph *gr, char *station)
 
 void update(Graph *gr, char *start, char *dest, int weight)
 {
-    Vnode *startn = findNode(gr, start);
-    Vnode *destn = findNode(gr, dest);
-    if (!startn)
+    Vnode *s = findNode(gr, start);
+    Vnode *d = findNode(gr, dest);
+    if (!s)
     {
         add(gr, start);
     }
-    if (!destn)
+    if (!d)
     {
         add(gr, dest);
     }
-
-    if (weight == 0)
+    if (!weight)
     {
-        disruptEdge(startn, dest);
+        disruptEdge(s, dest);
     }
     else
     {
+        Enode *e;
         Enode *prev = NULL;
-        while (startn->edges != NULL)
+        for (e = s->edges; e; e = e->next)
         {
-            if (strcmp(startn->edges->vertex, dest)==0)
+            if (!strcmp(e->vertex, dest))
             {
-                startn->edges->weight = weight;
+                e->weight = weight;
                 return;
             }
-            prev = startn->edges;
-            startn->edges= startn->edges->next;
+            prev = e;
         }
-        // no edge
         Enode *edge = (Enode *)malloc(sizeof(Enode));
         strcpy(edge->vertex, dest);
         edge->weight = weight;
         edge->next = NULL;
         if (!prev)
         {
-            startn->edges = edge;
+            s->edges = edge;
         }
         else
         {
@@ -213,8 +211,8 @@ void disrupt(Graph *gr, char *station)
         cur = gr->adj_list[i];
         if (strcmp(cur->station, station) == 0 && cur->edges != NULL)
         {
-            while (cur->edges!= NULL)
-            { 
+            while (cur->edges != NULL)
+            {
                 Enode *temp_edge = cur->edges;
                 cur->edges = cur->edges->next;
                 free(temp_edge);
