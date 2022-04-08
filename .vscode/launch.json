@@ -5,9 +5,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [
-        ""
-      ],
+      "args": [],
       "stopAtEntry": false,
       "cwd": "c:/Users/erfan/Dropbox (Old)/My PC (LAPTOP-62L3B98F)/Documents/ESC190/L5_starter-code",
       "environment": [],

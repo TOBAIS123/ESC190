@@ -26,5 +26,8 @@
     "**/.vscode",
     "**/.vscode/**"
   ],
-  "ros.distro": "noetic"
+  "ros.distro": "noetic",
+  "files.associations": {
+    "numbers": "c"
+  }
 }
