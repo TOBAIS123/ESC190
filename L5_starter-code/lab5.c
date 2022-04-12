@@ -46,29 +46,31 @@ void disruptNode(Graph *gr, char *station)
 void disruptEdge(Vnode *node, char *station)
 {
     Enode *prev = NULL;
-    while (node->edges != NULL)
+    Enode *edge= node->edges;
+    while (edge)
     { // loop through edges of cur (until becomes NULL)
-        if (strcmp(node->edges->vertex, station) == 0)
+        if (strcmp(edge->vertex, station) == 0)
         {
-            Enode *temp = node->edges;
+            Enode *temp = edge;
             if (!prev)
             {
                 node->edges = NULL;
             }
             else
             {
-                prev->next = node->edges->next;
+                prev->next = edge->next;
             }
             free(temp);
             return;
         }
-        prev = node->edges;
-        node->edges = node->edges->next;
+        prev = edge;
+        edge = edge->next;
     }
 }
 
 char **plan_route(Graph *gr, char *start, char *dest)
 {
+    //I just wiped this sectin because it didnt work at all
 }
 
 void add(Graph *gr, char *station)
@@ -116,18 +118,19 @@ void update(Graph *gr, char *start, char *dest, int weight)
     }
     else
     {
-        Enode *e;
+        Enode *edge;
         Enode *prev = NULL;
-        for (e = s->edges; e; e = e->next)
+        for (edge= s->edges; edge; edge = edge->next)
         {
-            if (!strcmp(e->vertex, dest))
+            if (strcmp(edge->vertex, dest)==0)
             {
-                e->weight = weight;
+                edge->weight = weight;
                 return;
             }
-            prev = e;
+            prev = edge;
         }
-        Enode *edge = (Enode *)malloc(sizeof(Enode));
+        edge=NULL;
+        edge = (Enode *)malloc(sizeof(Enode));
         strcpy(edge->vertex, dest);
         edge->weight = weight;
         edge->next = NULL;
