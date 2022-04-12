@@ -70,7 +70,7 @@ void disruptEdge(Vnode *node, char *station)
 
 char **plan_route(Graph *gr, char *start, char *dest)
 {
-    //I just wiped this sectin because it didnt work at all
+    //I just wiped this sectin because it didnt work at all\
 }
 
 void add(Graph *gr, char *station)
