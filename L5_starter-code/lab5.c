@@ -67,12 +67,14 @@ void disruptEdge(Vnode *node, char *station)
         edge = edge->next;
     }
 }
-
+/*
 char **plan_route(Graph *gr, char *start, char *dest)
 {
-    //I just wiped this sectin because it didnt work at all\
+    //I just wiped this sectin because it didnt work at all
+    
+    return 'a';
 }
-
+*/
 void add(Graph *gr, char *station)
 {
     for (int i = 0; i < gr->count; i++)
